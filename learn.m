@@ -1,4 +1,5 @@
-%import wdvglab.addme
+%import wdvgla
+b.addme
 import matlab.unittest.TestSuite
 
 logger = logging.getLogger('allnix');

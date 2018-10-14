@@ -4,7 +4,7 @@ classdef Basic < handle
     properties
         Value
         Other
-        
+        plot
     end
     properties (Constant)
         logger = logging.getLogger('allnix')
