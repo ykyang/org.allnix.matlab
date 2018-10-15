@@ -1,5 +1,11 @@
 %import wdvgla
-b.addme
+%b.addme
+
+% I have to do this everytime???
+% stupid matlab
+addpath('main', 'test');
+addpath('lib/logging4matlab-03b221f')
+
 import matlab.unittest.TestSuite
 
 logger = logging.getLogger('allnix');
