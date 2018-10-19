@@ -64,6 +64,7 @@ classdef StructureTest < matlab.unittest.TestCase
             s.f3 = 'lalala';
             me.assertEqual(s.f3, 'lalala');
             
+            % remove a filed
             s = rmfield(s, 'f3');
             me.assertFalse(isfield(s, 'f3'))
         end
