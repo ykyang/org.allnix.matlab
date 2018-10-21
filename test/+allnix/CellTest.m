@@ -11,7 +11,7 @@ classdef CellTest < matlab.unittest.TestCase
     
     methods (Test)
         function testBasicOperation(me)
-            c ={1,2,3;'a', 'b', 'c'};
+            c ={1, 2, 3;'a', 'b', 'c'};
            
             disp(['class: ' , class(c), 1, 2, '34']);
            
