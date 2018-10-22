@@ -2,6 +2,7 @@ classdef StructureTest < matlab.unittest.TestCase
     %STRUCTURETEST Learn MATLAB structure
     %
     %   https://www.mathworks.com/help/matlab/ref/struct.html
+    %
     %   suite = matlab.unittest.TestSuite.fromClass(?allnix.StructureTest);
     %   result = run(suite)
     %   disp(result)

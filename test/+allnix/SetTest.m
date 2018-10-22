@@ -13,8 +13,9 @@ classdef SetTest < matlab.unittest.TestCase
     end
     
     methods (Test)
-        function testBasicOperation(me)
-        %testBasicOperation 
+        function testMatlabCell(me)
+        %Try to use MATLAB cell array to simulate Set
+        %   and it sucks.
         
         
         s1 = {'a', 'b', 'c'};
@@ -31,6 +32,10 @@ classdef SetTest < matlab.unittest.TestCase
         
         end
         
+        
+        %>
+        %> Java Set
+        %>
         function testJavaSet(me)
         %Learn using Java Set in MATLAB
         
