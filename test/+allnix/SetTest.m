@@ -9,7 +9,7 @@ classdef SetTest < matlab.unittest.TestCase
     %   disp(result)
     
     properties
-        logger = logging.getLogger("org.allnix")
+        logger = logging.getLogger('org.allnix');
     end
     
     methods (Test)
