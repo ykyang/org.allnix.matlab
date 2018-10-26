@@ -1,4 +1,4 @@
-list = dir('lib/*.jar');
+list = dir('lib/java/*.jar');
 
 fcn = @(x) javaaddpath(fullfile(x.folder, x.name));
 
