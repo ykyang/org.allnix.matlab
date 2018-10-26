@@ -70,9 +70,50 @@ classdef StructureTest < matlab.unittest.TestCase
             me.assertFalse(isfield(s, 'f3'))
         end
         
+        
+        function testCopyByValue(me)
+            s = struct;
+            s.a.b = 5;
+            s.c.d = 13;
+            me.assertEqual(s.a.b, 5);
+            
+            % copy
+            a = s.a;
+            me.assertEqual(a.b, 5);
+            
+            % copy by value
+            a.b = 17;
+            me.assertEqual(a.b, 17);
+            me.assertEqual(s.a.b, 5);
+        end
+        
+        function testFunctionPass(me)
+            x =[1, 2];
+            %x(1) = 1;
+            %x(2) = 2;
+            %disp(x);
+            %disp(class(x));
+            me.assertEqual(x(1), 1);
+            me.assertEqual(x(2), 2);
+            y = me.modifyArray(x);
+            % not changed
+            me.assertEqual(x(1), 1);
+            me.assertEqual(x(2), 2);
+            % changed values from return
+            me.assertEqual(y(1), 17);
+            me.assertEqual(y(2), 19);
+            
+        end
     end
     
     methods
+        function y = modifyArray(me, x)
+            x(1) = 13.;
+            x(2) = 17.;
+            y = x;
+            y(1) = 17.;
+            y(2) = 19.;
+        end
         
     end
 end
