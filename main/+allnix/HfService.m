@@ -45,7 +45,7 @@ classdef HfService < handle
         htimer.TimerFcn = {@me.checkJob, job};
         htimer.ExecutionMode = 'fixedSpacing';
         htimer.Period = 0.5;
-        htimer.TasksToExecute = intmax('int64') - 1e3 % stupid matlab
+        htimer.TasksToExecute = intmax('int64') - 1e3; % stupid matlab
         end
         
         function checkJob(me, htimer, ~, job)

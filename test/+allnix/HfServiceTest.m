@@ -26,7 +26,7 @@ classdef HfServiceTest < matlab.unittest.TestCase
         
         % caller has a chance to set StopFcn here
 
-        htimer.start()
+        htimer.start();
         
         % caller goes into event loop
         % call pause() or drawnow from time to time to allow timer 
@@ -48,6 +48,7 @@ classdef HfServiceTest < matlab.unittest.TestCase
         
     end
     methods
+       
         function checkJob(me, hTimer, event, job)
         fprintf(1, 'Checking Job: %s\n', job.getId());
         if me.hfSvc.isDone(job)
