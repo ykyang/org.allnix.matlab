@@ -37,12 +37,7 @@ classdef BatchTest < matlab.unittest.TestCase
     end
     
     methods (Test)
-        function testParfeval(me)
-        % f FevalFuture
-        f = parfeval(me.pool, @allnix.BatchTest.compute, 1, 100);
-        value = fetchOutputs(f);
-        me.assertEqual(value, 5050);
-        end
+        
         
         function testMultipleParfeval(me)
                 
