@@ -48,6 +48,9 @@ classdef ParfevalTest < matlab.unittest.TestCase
         me.assertEqual(size(value,1),1e8); 
         end
         
+        function testMultipleInput(me)
+        me.takeVarargin(5., 13., 17);
+        end
         
         function testParfeval(me)
         len = 10000;
@@ -68,6 +71,13 @@ classdef ParfevalTest < matlab.unittest.TestCase
         
     end
     methods
+        function takeVarargin(me,varargin)
+        me.logger.info('class: %s', class(varargin));
+        me.logger.info('size(1) = %g', size(varargin,1));
+        me.logger.info('size(2) = %g', size(varargin,2));
+        me.logger.info('%s', allnix.obj2str(varargin));
+        
+        end
         function mydisp(me, value)
         me.logger.info('%g', value);
         end
