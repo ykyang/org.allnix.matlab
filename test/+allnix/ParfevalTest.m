@@ -36,23 +36,51 @@ classdef ParfevalTest < matlab.unittest.TestCase
         end
     end
     methods (Test)
+        function testException(me)
+        %Test catching exception thrown in parallel language construct
+        
+        future = parfeval(me.pool, @me.throwError, 1, 'not important');
+        
+        out = [];
+        try    
+            % any exception occured on the worker node
+            % happens during fetch
+            out = fetchOutputs(future);
+        catch ME
+            switch ME.identifier
+                case 'parallel:fevalqueue:ExecutionErrors'
+                    % Expected exception
+                    me.logger.info('worker exception: %s', allnix.obj2str(ME));
+                    %me.logger.info('%s', getReport(ME));
+                    me.logger.info('Cause: %s', allnix.obj2str(ME.cause{:}));
+                otherwise
+                    rethrow(ME)
+            end
+        end
+        end
+        
         function testReadBigFile(me)
+        %Use parfeval as non-blocking I/O
+        %   In addition to the actual I/O time
+        %   400MB/second transfer rate on my laptop
         dq = parallel.pool.DataQueue;
         % future @ FevalFuture
-        me.logger.info('TimeStamp');
+        startTime = tic;
+        me.logger.info('Start non-blocking I/O');
         future = parfeval(me.pool, @me.simReadBigFile, 1, 'filename', dq); 
-        me.logger.info('TimeStamp');
+        me.logger.info('After calling parfeval');
         % The memory is doubled at this point
         value = fetchOutputs(future);
-        me.logger.info('TimeStamp');
+        runtime = toc(startTime);
+        me.logger.info('Runtime: %g seconds', runtime);
+        me.logger.info('Transfered %g doubles', size(value,1)*size(value,2));
+                
         me.assertEqual(size(value,1),1e8); 
         end
-        
-        function testMultipleInput(me)
-        me.takeVarargin(5., 13., 17);
-        end
-        
+                
         function testParfeval(me)
+        %Learn how to do basic parfeval call
+        
         len = 10000;
         answer = (1+len)*len/2;
         freq = 1000;
@@ -60,7 +88,8 @@ classdef ParfevalTest < matlab.unittest.TestCase
         dq = parallel.pool.DataQueue;
         
         f = parfeval(me.pool, @allnix.ParfevalTest.compute, 1, len, freq, dq);
-        ol = dq.afterEach(@me.mydisp);
+        %ol = afterEach(dq, @me.mydisp);
+        ol = afterEach(dq, @(x) me.logger.info('received: %g', x));
         
         me.logger.info('class: %s', class(ol));
         me.logger.info('objectListener: %s', allnix.obj2str(ol));
@@ -71,21 +100,18 @@ classdef ParfevalTest < matlab.unittest.TestCase
         
     end
     methods
-        function takeVarargin(me,varargin)
-        me.logger.info('class: %s', class(varargin));
-        me.logger.info('size(1) = %g', size(varargin,1));
-        me.logger.info('size(2) = %g', size(varargin,2));
-        me.logger.info('%s', allnix.obj2str(varargin));
-        
-        end
-        function mydisp(me, value)
-        me.logger.info('%g', value);
-        end
         
         function answer = simReadBigFile(me, filename, dq)
+        %Simulate reading a big file of 800 MB
+        %   Actual I/O time are not included
+        %   Main purpose is to measure overhead in addition to
+        %   I/O time.
         answer = ones(1e8, 1);
         end
-       
+    
+        function out = throwError(me, in)
+        throw(MException('org:allnix:UnsupportedOperation','Error'));
+        end
     end
     
     

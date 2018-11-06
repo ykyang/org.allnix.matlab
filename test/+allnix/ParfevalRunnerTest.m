@@ -69,13 +69,16 @@ classdef ParfevalRunnerTest < matlab.unittest.TestCase
         job = me.runner.run(@me.inCellOutCell, 1, {5,7,11});
         out = fetchOutputs(job);
         
-        me.assertEqual(size(out,2), 3);
+        me.assertEqual(size(out,2), 2);
         me.assertEqual(out{1}, 5);
         me.assertEqual(out{2}, 7);
-        me.assertEqual(out{3}, 11);
-        
+        %me.assertEqual(out{3}, 11);
+    
         end
     
+        function testHeavyComputation(me)
+        
+        end
     end
     
     methods
@@ -91,7 +94,19 @@ classdef ParfevalRunnerTest < matlab.unittest.TestCase
         end
         
         function out = inCellOutCell(me, data)
-        out = data;
+        %Copy the first 2 cells from data to output cell array
+        out{1} = data{1};
+        out{2} = data{2};
+        end
+        
+        function out = in1Out1(me, data)
+        end
+        
+        function out = heavy(me,data)
+        % for
+        % parfor
+        % no batch
+        % no parfeval
         end
     end
 end
