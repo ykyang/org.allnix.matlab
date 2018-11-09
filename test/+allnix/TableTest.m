@@ -4,12 +4,49 @@ classdef TableTest < matlab.unittest.TestCase
     %   suite = matlab.unittest.TestSuite.fromClass(?allnix.TableTest);
     %   result = run(suite)
     %   disp(result)
+    %
+    %   s = selectIf(suite,'ProcedureName', 'testRowNames')
     
     properties
         logger = logging.getLogger('org.allnix');
     end
     
     methods (Test)
+        
+        function testRowNames(me)
+        %
+        %            Petrel 
+        %            _______
+        %
+        %   Perm     'perm' 
+        %   Tough    'tough'
+        %
+
+        rowNames = [{'Perm'}; {'Tough'}];
+        col =[{'perm'}; {'tough'}];
+        t = table(col, 'RowNames', rowNames, 'VariableNames', {'Petrel'});
+        t.Properties.DimensionNames{1} = 'Abalone';
+        %addvars(t, col, 'NewVariableNames', 'Petrel');
+%        t.Properties.RowNames = rowNames;
+        me.logger.info('\n%s', allnix.obj2str(t));
+        
+        % Get row names back
+        rowNames = t.Properties.RowNames;
+        me.assertEqual(class(rowNames{1}), 'char');
+        me.assertTrue(strcmp(rowNames{1}, 'Perm'));
+        me.assertEqual(rowNames{2}, 'Tough');
+        
+        % Get value based on row name
+        value = t{'Perm', 'Petrel'};
+        me.assertEqual(class(value), 'cell');
+        me.assertTrue(strcmp(value, 'perm'));
+       
+        
+        writetable(t, 'mytable.csv', 'WriteRowNames', true, 'WriteVariableNames', true);
+        tt = readtable('mytable.csv', 'ReadRowNames', true, 'ReadVariableNames', true);
+        me.assertEqual(tt, t);
+        
+        end
         function testReadTable(me)
         % Learn readtable
         %
@@ -22,6 +59,8 @@ classdef TableTest < matlab.unittest.TestCase
         filePath = fullfile(matlabroot,'examples','matlab','myCsvTable.dat');
         x = readtable(filePath);
         me.logger.info("\n%s", obj2str(x));
+        me.assertEqual(x{1,6}, 1);
+        me.assertEqual(x{1,2}, {'M'});
         
         end
         

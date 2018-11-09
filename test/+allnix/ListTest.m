@@ -3,6 +3,10 @@ classdef ListTest < matlab.unittest.TestCase
     %   Detailed explanation goes here
     %
     %   suite = matlab.unittest.TestSuite.fromClass(?allnix.ListTest);
+    %   result = run(suite)
+    %   disp(result)
+    
+    %   s = selectIf(suite,'ProcedureName', 'testBatch')
     
     properties
         logger = logging.getLogger('org.allnix')
@@ -11,6 +15,7 @@ classdef ListTest < matlab.unittest.TestCase
     methods (Test)
         function testPrimitive(me)
         list = java.util.ArrayList();
+        
         list.add(15);
         me.assertEqual(list.size(), 1);
 
@@ -20,6 +25,7 @@ classdef ListTest < matlab.unittest.TestCase
         
         function testStruct(me)
         list = java.util.ArrayList();
+        
         data = struct;
         data.Log = struct;
         data.Log.values = [13, 17];
@@ -28,13 +34,15 @@ classdef ListTest < matlab.unittest.TestCase
         me.assertError(@() list.add(data), 'MATLAB:UndefinedFunction');
         
         % need to turn things into byte array
-        
+        bytes = allnix.toInt8Array(data);
+                
         % add data to list
-        list.add(allnix.toInt8Array(data));
+        list.add(bytes);
         me.assertEqual(list.size(), 1);
         
         % get data from list
-        data_new = allnix.toMatlab(list.get(0));
+        bytes = list.get(0);
+        data_new = allnix.toMatlab(bytes);
         me.assertEqual(data_new, data);
         me.assertEqual(data_new.Log.values, data.Log.values);
         
@@ -42,6 +50,7 @@ classdef ListTest < matlab.unittest.TestCase
         end
         
         function testList(me)
+        %Test Java List wrapper
         list = allnix.List(java.util.ArrayList);
         
         data = struct;
@@ -50,6 +59,7 @@ classdef ListTest < matlab.unittest.TestCase
         
         v = list.add(data);
         me.assertTrue(v);
+        me.assertEqual(list.size(), 1);
         
         data_new = list.get(0);
         me.assertEqual(data_new, data);

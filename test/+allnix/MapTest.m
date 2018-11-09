@@ -5,6 +5,8 @@ classdef MapTest < matlab.unittest.TestCase
     %   suite = matlab.unittest.TestSuite.fromClass(?allnix.MapTest);
     %   result = run(suite)
     %   disp(result)
+    %
+    %   s = selectIf(suite,'ProcedureName', 'testMap')
     %   
     %   Double check the object coming out of map.
     %   Put java.lang.String in but get 'char' out
@@ -37,6 +39,21 @@ classdef MapTest < matlab.unittest.TestCase
         map = containers.Map('KeyType', 'int64', 'ValueType', 'char');
         map(5) = 'five';
         me.assertEqual(map(5), 'five')
+        end
+        
+        function testMap(me)
+        map = allnix.Map(java.util.HashMap());
+        
+        data = struct;
+        data.Log = struct;
+        data.Log.values = [13, 17];
+        
+        v = map.put('st', data);
+        me.assertTrue(isempty(v));
+        me.assertEqual(map.size(), 1);
+        
+        
+        
         end
         
         function testJavaMap(me)
