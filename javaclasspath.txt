@@ -1,7 +1,5 @@
+<before>
 lib/main/java/jackson-annotations-2.7.3.jar
 lib/main/java/jackson-databind-2.7.3.jar
 lib/main/java/jackson-core-2.7.3.jar         
-lib/main/java/logback-classic-1.1.2.jar
-lib/main/java/logback-core-1.1.2.jar
-lib/main/java/slf4j-api-1.7.13.jar
 lib/main/resources
