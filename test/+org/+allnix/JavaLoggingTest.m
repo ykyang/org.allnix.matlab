@@ -19,6 +19,11 @@ classdef JavaLoggingTest < matlab.unittest.TestCase
         me.logger.info('My first Java logging in MATLAB');
         me.logger.warn('My first warn');
         me.logger.error('My first error');
+        
+        i = 10;
+        me.logger.info('Message: i = {}', i);
+        s = 'test message';
+        me.logger.info('Message: {}', s);
         end
         
     end
