@@ -13,13 +13,26 @@ classdef TableTest < matlab.unittest.TestCase
     
     methods (Test)
         
+        function testVariableDescription(me)
+        data = [1,2; 3, 4];
+        VariableNames = {'Stage', 'Duration', 'lalal'};
+        VariableDescriptions = {'Well Stage', 'Pumping Duration'};
+        
+        Table = table(data ...
+            ,'VariableNames', VariableNames ... %,'VariableDescription', VariableDescriptions ...
+        );
+        
+        me.logger.info('Table: \n%s', allnix.obj2str(Table));
+        
+        end
+        
         function testRowNames(me)
         %
         %            Petrel 
         %            _______
         %
         %   Perm     'perm' 
-        %   Tough    'tough'
+        %   Tough    'tough'l
         %
 
         rowNames = [{'Perm'}; {'Tough'}];
@@ -105,6 +118,84 @@ classdef TableTest < matlab.unittest.TestCase
         me.assertEqual(size(c,1), rowCount);
         me.assertEqual(c(1), 176);
         me.assertEqual(c(2), 163);
+        end
+        
+        function testTable(me)
+        
+        filepath = fullfile(pwd, 'small.csv');
+        M = ones(1642,10);
+        start = tic;
+        csvwrite(filepath, M);
+        et = toc(start);
+        me.logger.info('csvwrite: %g', et);
+        
+        times = 10;
+        
+        sum = 0;
+        for i = 1:times
+            start = tic;
+            csv = csvread(filepath, 1);
+            et = toc(start);
+            sum = sum + et;
+        end
+        et = sum/times;
+        me.logger.info('csvread: %g seconds', et);
+        csvreadEt = et;
+        
+%         start = tic;
+%         csv = csvread(filepath, 2);
+%         dur = toc(start);
+%         me.logger.info('csvread: %g seconds', dur);
+        
+        sum = 0;
+        for i = 1:times
+            start = tic;
+            csv = readtable(filepath, 'Delimiter', ',', 'ReadRowNames', false, ...
+                'ReadVariableName', false);
+            et = toc(start);
+            sum = sum + et;
+        end
+        et = sum/times;
+        me.logger.info('readtable: %g seconds', et);
+        readtableEt = et;
+        
+        % small CSV
+        % table is slower than csvread
+        me.assertGreaterThan(readtableEt, csvreadEt);
+        
+%         start = tic;
+%         csv = readtable(filepath, 'Delimiter', ',', 'ReadRowNames', false, ...
+%             'ReadVariableName', true);
+%         dur = toc(start);
+%         me.logger.info('readtable: %g seconds', dur);
+        
+        
+        end
+        
+        function testBigCsv(me)
+        filepath = fullfile(pwd, 'big.csv');
+        M = ones(200000,10);
+        start = tic;
+        csvwrite(filepath, M);
+        et = toc(start);
+        me.logger.info('csvwrite: %g', et);
+        
+        start = tic;
+        csv = csvread(filepath, 1);
+        et = toc(start);
+        me.logger.info('csvread: %g seconds', et);
+        csvreadEt = et;
+       
+        
+        start = tic;
+        csv = readtable(filepath, 'Delimiter', ',', 'ReadRowNames', false, ...
+            'ReadVariableName', false);
+        et = toc(start);
+        me.logger.info('readtable: %g seconds', et);
+        tableEt = et;
+        
+        me.assertLessThan(tableEt, csvreadEt);
+        
         end
     end
 end
