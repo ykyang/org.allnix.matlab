@@ -9,7 +9,7 @@ logger.info('Function Name: {}', functionName);
 
 switch functionName
     case 'compute'
-        file = varargin{2};
+        file = varargin{1};
         logger.info('Compute on file: {}', file);
     case 'disp'
         disp('Hello world');
