@@ -12,6 +12,10 @@ classdef JsonRpcRequest < matlab.mixin.SetGetExactNames
         me.jsonrpc = jsondecode(text);
         end
         
+        function load(me, text)
+        me.jsonrpc = jsondecode(text);
+        end
+        
         function answer = getVersion(me)
         answer = me.jsonrpc.jsonrpc;
         end
